@@ -95,12 +95,15 @@ For Ubuntu versions older than 16.04 (xenial), substitute:
 
 #### Java
 
-Different versions of LineageOS require different JDK (Java Development Kit) versions.
-
-* LineageOS 14.1: OpenJDK 1.8 (install `openjdk-8-jdk`)
+{% for version in device.versions %}
+{% if version < 14 %}
 * LineageOS 11.0-13.0: OpenJDK 1.7 (install `openjdk-7-jdk`)\*
 
 \* Ubuntu 16.04 and newer do not have OpenJDK 1.7 in the standard package repositories. See the *Ask Ubuntu* question "[How do I install openjdk 7 on Ubuntu 16.04 or higher?](http://askubuntu.com/questions/761127/how-do-i-install-openjdk-7-on-ubuntu-16-04-or-higher)". Note that the suggestion to use PPA openjdk-r is outdated (the PPA has never updated their offering of openjdk-7-jdk, so it lacks security fixes); skip that answer even if it is the most upvoted.
+{% else %}
+* LineageOS 14.1: OpenJDK 1.8 (install `openjdk-8-jdk`)
+{% endif %}
+{% endfor %}
 
 ### Create the directories
 
@@ -250,6 +253,15 @@ export ANDROID_JACK_VM_ARGS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4G
 
 Adding that command to your `~/.bashrc` file will automatically configure Jack to allocate a sufficient amount of memory (in this case, 4GB).
 {% endif %}
+
+### Configure output directory
+
+By default, the output is stored in the out/ subdirectory the source tree. 
+Storing the source files and the output directory on separate volumes can speed up build process.
+
+```
+export OUT_DIR_COMMON_BASE=<path-to-your-out-directory>
+```
 
 ### Start the build
 
